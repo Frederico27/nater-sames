@@ -7,6 +7,7 @@ use App\Filament\Resources\FunsionariuResource\RelationManagers;
 use App\Models\Funsionariu;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -161,12 +162,62 @@ class FunsionariuResource extends Resource
                 //
             ])
             ->actions([
+                // Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Infolists\Components\Section::make('Personal Information')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('naran')
+                            ->label('Name'),
+                        Infolists\Components\TextEntry::make('sex')
+                            ->label('Gender'),
+                        Infolists\Components\TextEntry::make('data_moris')
+                            ->label('Birth Date')
+                            ->date(),
+                        Infolists\Components\TextEntry::make('hela_fatin')
+                            ->label('Address'),
+                        Infolists\Components\TextEntry::make('nu_telemovel')
+                            ->label('Phone Number'),
+                        Infolists\Components\TextEntry::make('email')
+                            ->label('Email'),
+                    ])
+                    ->columns(2),
+
+                Infolists\Components\Section::make('Employment Details')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('pozisaun')
+                            ->label('Position'),
+                        Infolists\Components\TextEntry::make('departamentu')
+                            ->label('Department'),
+                        Infolists\Components\TextEntry::make('status')
+                            ->label('Status')
+                            ->badge()
+                            ->color(fn(string $state): string => match ($state) {
+                                'ativu' => 'success',
+                                'inativu' => 'danger',
+                                default => 'warning',
+                            }),
+                        Infolists\Components\TextEntry::make('nivel.naran')
+                            ->label('Level'),
+                        Infolists\Components\TextEntry::make('created_at')
+                            ->label('Created At')
+                            ->dateTime(),
+                        Infolists\Components\TextEntry::make('updated_at')
+                            ->label('Updated At')
+                            ->dateTime(),
+                    ])
+                    ->columns(2),
             ]);
     }
 
@@ -182,6 +233,7 @@ class FunsionariuResource extends Resource
         return [
             'index' => Pages\ListFunsionarius::route('/'),
             'create' => Pages\CreateFunsionariu::route('/create'),
+            'view' => Pages\ViewFunsionariu::route('/{record}'),
             'edit' => Pages\EditFunsionariu::route('/{record}/edit'),
         ];
     }

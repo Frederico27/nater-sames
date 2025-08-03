@@ -6,7 +6,10 @@ use App\Filament\Resources\FunsionariuResource\Pages;
 use App\Filament\Resources\FunsionariuResource\RelationManagers;
 use App\Models\Funsionariu;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -162,7 +165,7 @@ class FunsionariuResource extends Resource
                 //
             ])
             ->actions([
-                // Tables\Actions\ViewAction::make(),
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -175,32 +178,58 @@ class FunsionariuResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
-            ->schema([
-                Infolists\Components\Section::make('Personal Information')
-                    ->schema([
-                        Infolists\Components\TextEntry::make('naran')
-                            ->label('Name'),
-                        Infolists\Components\TextEntry::make('sex')
-                            ->label('Gender'),
-                        Infolists\Components\TextEntry::make('data_moris')
-                            ->label('Birth Date')
-                            ->date(),
-                        Infolists\Components\TextEntry::make('hela_fatin')
-                            ->label('Address'),
-                        Infolists\Components\TextEntry::make('nu_telemovel')
-                            ->label('Phone Number'),
-                        Infolists\Components\TextEntry::make('email')
-                            ->label('Email'),
-                    ])
-                    ->columns(2),
+    
+        ->schema([
+                        \Filament\Infolists\Components\Section::make('Informasaun Personal')
+                        ->schema([
+                            \Filament\Infolists\Components\Grid::make(3)
+                                ->schema([
+                                    \Filament\Infolists\Components\Group::make([
+                                        TextEntry::make('naran_kompletu')
+                                            ->label('Naran Kompletu')
+                                            ->weight('bold')
+                                            ->size(TextEntry\TextEntrySize::Large),
+                                        TextEntry::make('sexu')
+                                            ->label('Sexu')
+                                            ->badge(),
+                                        TextEntry::make('loron_moris')
+                                            ->label('Loron Moris')
+                                            ->date('d F Y'),
+                                    ])->columnSpan(2),
+                                    ImageEntry::make('image')
+                                        ->label('Foto')
+                                        ->defaultImageUrl(asset('https://static.vecteezy.com/system/resources/thumbnails/001/840/618/small_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg'))
+                                        ->circular()
+                                        ->width(150)
+                                        ->height(150)
+                                        ->columnSpan(1),
+                                ]),
+                            \Filament\Infolists\Components\Section::make('Kontaktu & Edukasaun')
+                                ->schema([
+                                    TextEntry::make('nivel_edukasaun')
+                                        ->label('Nivel Edukasaun')
+                                        ->icon('heroicon-o-academic-cap'),
+                                    TextEntry::make('nu_telefone')
+                                        ->label('Numeru Telefone')
+                                        ->icon('heroicon-o-phone'),
+                                    TextEntry::make('email')
+                                        ->label('Email')
+                                        ->icon('heroicon-o-envelope')
+                                        ->url(fn ($record) => $record->email ? "mailto:{$record->email}" : null),
+                                ])
+                                ->columns(3)
+                                ->collapsible(),
+                        ])
+                        ->columnSpanFull(),
+                    
 
-                Infolists\Components\Section::make('Employment Details')
+                \Filament\Infolists\Components\Section::make('Detallu Funsionariu')
                     ->schema([
-                        Infolists\Components\TextEntry::make('pozisaun')
+                        TextEntry::make('pozisaun')
                             ->label('Position'),
-                        Infolists\Components\TextEntry::make('departamentu')
+                        TextEntry::make('departamentu')
                             ->label('Department'),
-                        Infolists\Components\TextEntry::make('status')
+                        TextEntry::make('status')
                             ->label('Status')
                             ->badge()
                             ->color(fn(string $state): string => match ($state) {
@@ -208,13 +237,13 @@ class FunsionariuResource extends Resource
                                 'inativu' => 'danger',
                                 default => 'warning',
                             }),
-                        Infolists\Components\TextEntry::make('nivel.naran')
+                        TextEntry::make('nivel.naran')
                             ->label('Level'),
-                        Infolists\Components\TextEntry::make('created_at')
-                            ->label('Created At')
+                        TextEntry::make('created_at')
+                            ->label('Dadus Kria iha')
                             ->dateTime(),
-                        Infolists\Components\TextEntry::make('updated_at')
-                            ->label('Updated At')
+                        TextEntry::make('updated_at')
+                            ->label('Dadus Renova')
                             ->dateTime(),
                     ])
                     ->columns(2),

@@ -9,4 +9,5 @@ use Filament\Resources\Pages\ViewRecord;
 class ViewFunsionariu extends ViewRecord
 {
     protected static string $resource = FunsionariuResource::class;
+    
 }

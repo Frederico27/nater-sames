@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
 use App\Filament\Resources\FunsionariuSubsidiuResource\Pages;
 use App\Filament\Resources\FunsionariuSubsidiuResource\RelationManagers;
 use App\Models\FunsionariuSubsidiu;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -36,14 +38,24 @@ class FunsionariuSubsidiuResource extends Resource
                     ->relationship('subsidiu', 'naran_subsidiu'),
                 Forms\Components\DatePicker::make('start_date')
                     ->required(),
-                Forms\Components\DatePicker::make('end_date')
-                    ->required(),
+                    Forms\Components\DatePicker::make('end_date')
+                    ->required()
+                    ->afterStateUpdated(function ($state, Forms\Set $set) {
+                        // Check if end_date is in the past
+                        if ($state && Carbon::parse($state)->isPast()) {
+                            $set('status', 'inactive');
+                        } else {
+                            $set('status', 'active');
+                        }
+                    })
+                    ->reactive(),
                 Forms\Components\Select::make('status')
-                ->options([
-                    'active' => 'Ativu',
-                    'inactive' => 'Inativu',
-                ])
-                    ->required(),
+                    ->options([
+                        'active' => 'Ativu',
+                        'inactive' => 'Inativu',
+                    ])
+                    ->required()
+                    ->default('active'),
             ]);
     }
 
@@ -84,7 +96,31 @@ class FunsionariuSubsidiuResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            
+            ->headerActions([
+                FilamentExportHeaderAction::make('export')
+                ->fileName('My File') // Default file name
+                ->timeFormat('m y d') // Default time format for naming exports
+                ->defaultFormat('pdf') // xlsx, csv or pdf
+                ->defaultPageOrientation('landscape') // Page orientation for pdf files. portrait or landscape
+                // ->directDownload() // Download directly without showing modal
+                // ->disableAdditionalColumns() // Disable additional columns input
+                // ->disableFilterColumns() // Disable filter columns input
+                // ->disableFileName() // Disable file name input
+                // ->disableFileNamePrefix() // Disable file name prefix
+                // ->disablePreview() // Disable export preview
+                ->withHiddenColumns() //Show the columns which are toggled hidden
+                ->fileNameFieldLabel('File Name') // Label for file name input
+                ->formatFieldLabel('Format') // Label for format input
+                ->pageOrientationFieldLabel('Page Orientation') // Label for page orientation input
+            // ->filterColumnsFieldLabel('filter columns') // Label for filter columns input
+            // ->additionalColumnsFieldLabel('Additional Columns') // Label for additional columns input
+            // ->additionalColumnsTitleFieldLabel('Title') // Label for additional columns' title input
+            // ->additionalColumnsDefaultValueFieldLabel('Default Value') // Label for additional columns' default value input
+            // ->additionalColumnsAddButtonLabel('Add Column') // Label for additional columns' add button
+            ])
+            ;
     }
 
     public static function getRelations(): array

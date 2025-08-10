@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateDiresaun extends CreateRecord
 {
     protected static string $resource = DiresaunResource::class;
+       protected static ?string $title = 'Kria Diresaun';
 }

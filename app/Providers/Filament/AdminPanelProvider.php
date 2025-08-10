@@ -42,7 +42,7 @@ class AdminPanelProvider extends PanelProvider
                 'Administrasaun Lugar Serbisu no Munisipiu',
                 'Administrasaun Kareira'
             ])
-            ->brandName("Hello")
+            ->brandName("INFPM")
             ->brandLogo(asset('logo/image.png'))
             ->brandLogoHeight('5em')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

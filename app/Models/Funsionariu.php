@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -32,30 +33,54 @@ class Funsionariu extends Model
         'payroll',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::retrieved(function ($model) {
+            $model->checkAndUpdateStatus();
+        });
+        
+        static::saving(function ($model) {
+            $model->checkAndUpdateStatus();
+        });
+    }
+    
+    protected function checkAndUpdateStatus()
+    {
+        if ($this->end_work && Carbon::parse($this->end_work)->isPast()) {
+            $this->status = 'inativu';
+        }
+    }
+
     public function subsidiu(): BelongsToMany
     {
         return $this->belongsToMany(Subsidiu::class, 'funsionariu_subsidiu', 'id_funsionariu', 'id_subsidiu')
-        ->withPivot('start_date', 'end_date')
-        ->withTimestamps();
+            ->withPivot('start_date', 'end_date')
+            ->withTimestamps();
     }
 
-    public function funsionariuSubsidiu(): BelongsTo{
-        return $this->belongsTo(FunsionariuSubsidiu::class, 'id_funsionariu');
+    
+    public function funsionariuSubsidiu(): HasMany
+    {
+        return $this->hasMany(FunsionariuSubsidiu::class, 'id_funsionariu', 'id');
     }
 
-    public function grau(): HasMany {
-        return $this->hasMany(Grau::class, 'id');
+    public function grau(): BelongsTo
+    {
+        return $this->belongsTo(Grau::class, 'id_grau');
+    }
+    public function munisipiu(): BelongsTo
+    {
+        return $this->belongsTo(Munisipiu::class, 'id_munisipiu');
+    }
+    public function espasu_servisu(): BelongsTo
+    {
+        return $this->belongsTo(EspasuServisu::class, 'id_espasu_servisu');
     }
 
-    public function munisipiu(): HasMany {
-        return $this->hasMany(Munisipiu::class, 'id');
-    }
-
-    public function espasu_servisu(): HasMany {
-        return $this->hasMany(EspasuServisu::class, 'id');
-    }
-
-    public function regimeEspesial(): HasMany {
-        return $this->hasMany(RegimeEspesial::class, 'id_regime');
+    public function regimeEspesial(): BelongsTo
+    {
+        return $this->belongsTo(RegimeEspesial::class, 'id_regime');
     }
 }

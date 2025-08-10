@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateFunsionariuSubsidiu extends CreateRecord
 {
     protected static string $resource = FunsionariuSubsidiuResource::class;
+    protected static ?string $title = 'Kria Funsionariu Subsidiu';
 }

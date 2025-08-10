@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateMunisipiu extends CreateRecord
 {
     protected static string $resource = MunisipiuResource::class;
+    protected static ?string $title = 'Kria Munisipiu';
 }

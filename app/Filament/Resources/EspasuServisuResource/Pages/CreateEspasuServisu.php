@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateEspasuServisu extends CreateRecord
 {
     protected static string $resource = EspasuServisuResource::class;
+    protected static ?string $title = 'Kria Espasu Servisu';
 }

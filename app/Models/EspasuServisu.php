@@ -18,7 +18,8 @@ class EspasuServisu extends Model
         return $this->hasMany(Diresaun::class, 'id');
     }
 
-    public function funsionariu(): BelongsTo {
-        return $this->belongsTo(Funsionariu::class, 'id_funsionariu');
+    public function funsionariu(): HasMany {
+        return $this->hasMany(Funsionariu::class, 'id_espasu_servisu');
     }
+    
 }

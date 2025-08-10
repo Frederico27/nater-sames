@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateGrau extends CreateRecord
 {
     protected static string $resource = GrauResource::class;
+    protected static ?string $title = 'Kria Grau';
 }

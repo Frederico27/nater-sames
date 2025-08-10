@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Munisipiu extends Model
 {
@@ -13,8 +13,9 @@ class Munisipiu extends Model
     protected $fillable = ['naran_munisipiu'];
     public $timestamps = false;
 
-    public function funsionariu(): BelongsTo {
-        return $this->belongsTo(Funsionariu::class, 'id_munisipiu');
-    }
+    
+public function funsionarius(): HasMany {
+    return $this->hasMany(Funsionariu::class, 'id_munisipiu');
+}
 
 }
